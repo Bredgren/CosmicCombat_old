@@ -13,20 +13,26 @@ int main() {
     sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
   sf::View main_view(sf::Vector2f(0, 0), sf::Vector2f(800, 600));
-  main_view.zoom(0.1f);
+
+  //sf::Font font;
+  //if (!font.loadFromFile("C:/Windows/Fonts/arial.ttf"))
+  //  printf("error");
+  //sf::Text time_text;
+  //time_text.setFont(font);
+  //time_text.setCharacterSize(12);
+  //time_text.setColor(sf::Color::White);
 
   b2Vec2 gravity(0.0f, 10.0f);
   b2World world(gravity);
 
   DebugDraw debug_draw(&window);
-  if (kDrawDebugData) {
-    debug_draw.AppendFlags(b2Draw::e_shapeBit |
-                           b2Draw::e_jointBit |
-                           b2Draw::e_aabbBit |
-                           b2Draw::e_pairBit |
-                           b2Draw::e_centerOfMassBit);
-    world.SetDebugDraw(&debug_draw);
-  }
+  debug_draw.AppendFlags(b2Draw::e_shapeBit |
+                         b2Draw::e_jointBit |
+                         b2Draw::e_aabbBit |
+                         b2Draw::e_pairBit |
+                         b2Draw::e_centerOfMassBit);
+  world.SetDebugDraw(&debug_draw);
+
 
   b2BodyDef groundBodyDef;
   groundBodyDef.position.Set(0.0f, 10.0f);
@@ -51,13 +57,13 @@ int main() {
   bodyDef2.position.Set(0.0f, -7.0f);
   b2Body* body2 = world.CreateBody(&bodyDef2);
   b2PolygonShape dynamicBox2;
-  dynamicBox2.SetAsBox(1.0f, 1.0f);
+  dynamicBox2.SetAsBox(0.5f, 0.5f);
   b2FixtureDef fixtureDef2;
   fixtureDef2.shape = &dynamicBox2;
   fixtureDef2.density = 1.0f;
   fixtureDef2.friction = 0.3f;
   body2->CreateFixture(&fixtureDef2);
-  float32 timeStep = 1.0f / 60.0f;
+  float32 timeStep = 1.0f / 240.0f;
   int32 velocityIterations = 6;
   int32 positionIterations = 2;
 
@@ -68,13 +74,17 @@ int main() {
         window.close();
     }
 
-    world.Step(timeStep, velocityIterations, positionIterations);
+    for (int32 i = 0; i < 4; i++)
+      world.Step(timeStep, velocityIterations, positionIterations);
 
     window.setView(main_view);
     window.clear();
 
     if (kDrawDebugData)
       world.DrawDebugData();
+
+    //window.setView(window.getDefaultView());
+    //draw hud here
 
     window.display();
   }
