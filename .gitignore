@@ -1,0 +1,14 @@
+*.suo
+
+*.tlog
+
+/CosmicCombatProject/CosmicCombatProject/Debug/*.lastbuildstate
+
+*.log
+*.obj
+
+*.idb
+*.pdb
+*.exe
+*.ilk
+*.opensdf
