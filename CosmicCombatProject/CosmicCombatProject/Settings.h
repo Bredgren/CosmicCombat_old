@@ -5,7 +5,11 @@
 
 #include <Box2D\Box2D.h>
 
-const bool kDrawDebugData = true;
+const bool kDebugMode = true;
 const int32 kPixelsPerMeter = 16;
+
+const float32 kMinTimeStep = 1.0f / 240.0f;
+const int32 kVelocityIterations = 6;
+const int32 kPositionIterations = 2;
 
 #endif  // COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_SETTINGS_H_

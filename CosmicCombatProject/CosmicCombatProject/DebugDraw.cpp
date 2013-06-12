@@ -92,10 +92,14 @@ void DebugDraw::DrawTransform(const b2Transform& xf) {
   p3 = p1 + k_axisScale * xf.q.GetYAxis();
 
   sf::Vertex lines[] = {
-    sf::Vertex(sf::Vector2f(p1.x * kPixelsPerMeter, p1.y * kPixelsPerMeter), c),
-    sf::Vertex(sf::Vector2f(p2.x * kPixelsPerMeter, p2.y * kPixelsPerMeter), c),
-    sf::Vertex(sf::Vector2f(p1.x * kPixelsPerMeter, p1.y * kPixelsPerMeter), c2),
-    sf::Vertex(sf::Vector2f(p3.x * kPixelsPerMeter, p3.y * kPixelsPerMeter), c2)
+    sf::Vertex(sf::Vector2f(p1.x * kPixelsPerMeter,
+                            p1.y * kPixelsPerMeter), c),
+    sf::Vertex(sf::Vector2f(p2.x * kPixelsPerMeter,
+                            p2.y * kPixelsPerMeter), c),
+    sf::Vertex(sf::Vector2f(p1.x * kPixelsPerMeter,
+                            p1.y * kPixelsPerMeter), c2),
+    sf::Vertex(sf::Vector2f(p3.x * kPixelsPerMeter,
+                            p3.y * kPixelsPerMeter), c2)
   };
 
   window_->draw(lines, 4, sf::Lines);

@@ -87,10 +87,12 @@
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="TournamentGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Settings.h" />
+    <ClInclude Include="TournamentGame.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
