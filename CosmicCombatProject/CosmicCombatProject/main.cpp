@@ -10,8 +10,8 @@
 #include "./TournamentGame.h"
 
 int main() {
-  sf::RenderWindow window(sf::VideoMode(800, 600), "Box2D test",
-    sf::Style::Titlebar | sf::Style::Close | sf::Style::Resize);
+  sf::RenderWindow window(sf::VideoMode(800, 600), "Cosmic Combat",
+    sf::Style::Titlebar | sf::Style::Close);
   window.setVerticalSyncEnabled(true);
   sf::View main_view(sf::Vector2f(0, 0), sf::Vector2f(800, 600));
 
@@ -122,6 +122,11 @@ int main() {
 
     game.Step();
     game.world()->ClearForces();
+
+    if (!player_body->IsAwake()) {
+      player_body->SetLinearVelocity(b2Vec2_zero);
+      target = player_body->GetPosition();
+    }
 
     b2Vec2 player_loc = player_body->GetPosition();
     main_view.setCenter(player_loc.x*kPixelsPerMeter,
