@@ -18,7 +18,7 @@ int main() {
   sf::Vector2i center(400, 300);
 
   TournamentGame game(100.0f, 100.0f);
-  b2Body *player_body = game.player_body();
+  b2Body *player_body = game.player1_body();
 
   DebugDraw debug_draw(&window);
   debug_draw.AppendFlags(b2Draw::e_shapeBit |
@@ -50,18 +50,12 @@ int main() {
       case sf::Event::MouseButtonPressed:
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
           drag = true;
+        } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+          sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
+          sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, main_view);
+          target.x = worldPos.x / kPixelsPerMeter;
+          target.y = worldPos.y / kPixelsPerMeter;
         }
-        //if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-        //  sf::Vector2i mouse_pos(prev_x, prev_y);
-        //  sf::Vector2i dir = mouse_pos - center;
-        //  b2Vec2 impulse(dir.x / 10.0f, dir.y / 10.0f);
-        //  if (impulse.y > 15.0f) {
-        //    impulse.y = 15.0f;
-        //  } else if (impulse.y < -15.0f) {
-        //    impulse.y = -15.0f;
-        //  }
-        //  player_body->ApplyLinearImpulse(impulse, player_body->GetPosition());
-        //}
         break;
       case sf::Event::MouseButtonReleased:
         if (!sf::Mouse::isButtonPressed(sf::Mouse::Left))
@@ -70,8 +64,8 @@ int main() {
       case sf::Event::MouseMoved:
         if (kDebugMode && sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) &&
             drag)
-          main_view.move(prev_x - event.mouseMove.x,
-                         prev_y - event.mouseMove.y);
+          main_view.move(static_cast<float>(prev_x - event.mouseMove.x),
+                         static_cast<float>(prev_y - event.mouseMove.y));
         prev_x = event.mouseMove.x;
         prev_y = event.mouseMove.y;
         break;
@@ -97,15 +91,6 @@ int main() {
       sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, main_view);
       target.x = worldPos.x / kPixelsPerMeter;
       target.y = worldPos.y / kPixelsPerMeter;
-    //  sf::Vector2i mouse_pos(prev_x, prev_y);
-    //  sf::Vector2i dir = mouse_pos - center;
-    //  b2Vec2 impulse(dir.x/100.0f, 0);
-    //  if (sf::Mouse::isButtonPressed(sf::Mouse::Left) &&
-    //    player_body->GetLinearVelocity().Length() < 20.0f ||
-    //      ((player_body->GetLinearVelocity().x >= 0 && impulse.x <= 0) ||
-    //       (player_body->GetLinearVelocity().x <= 0 && impulse.x >= 0))) {
-    //    player_body->ApplyLinearImpulse(impulse, player_body->GetPosition());
-    //  }
     }
 
     b2Vec2 dir = target - player_body->GetPosition();
@@ -115,13 +100,11 @@ int main() {
       player_body->SetLinearVelocity(dir);
     } else {
       player_body->SetLinearVelocity(b2Vec2_zero);
-      target = player_body->GetPosition();
+      // target = player_body->GetPosition();
+      player_body->SetTransform(target, player_body->GetAngle());
     }
 
-    //player_body->SetTransform(player_body->GetPosition(), 3.14/4);
-
     game.Step();
-    game.world()->ClearForces();
 
     if (!player_body->IsAwake()) {
       player_body->SetLinearVelocity(b2Vec2_zero);

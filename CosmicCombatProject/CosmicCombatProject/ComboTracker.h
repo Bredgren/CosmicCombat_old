@@ -1,12 +1,6 @@
 /* Copyright 2013 - Brandon Edgren */
-#ifndef CCL_COMBOTRACKER_H_
-#define CCL_COMBOTRACKER_H_
-
-#ifdef CCL_EXPORTS
-#define CCL_API __declspec(dllexport)
-#else
-#define CCL_API __declspec(dllimport)
-#endif
+#ifndef COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_COMBOTRACKER_H_
+#define COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_COMBOTRACKER_H_
 
 #include <stdint.h>
 
@@ -19,8 +13,6 @@ using std::unordered_map;
 using std::unordered_set;
 using std::string;
 using std::vector;
-
-namespace cc {
 
 /// A general key combo tracker.
 /**
@@ -57,8 +49,8 @@ class ComboTracker {
     MODE1
   };
 
-  CCL_API ComboTracker(void);
-  CCL_API virtual ~ComboTracker(void);
+  ComboTracker(void);
+  virtual ~ComboTracker(void);
 
   /// Adds a combo to look for.
   /**
@@ -67,7 +59,7 @@ class ComboTracker {
       @param sequence the sequence of characters of the combo.
       @param mode the mode to attach the sequence to.
    */
-  CCL_API void RegisterCombo(const string sequence, const MODE mode);
+  void RegisterCombo(const string sequence, const MODE mode);
 
   /// Sets the callback function
   /** 
@@ -75,7 +67,7 @@ class ComboTracker {
       function printf's the paramaters that the callback takes.
       @param func a pointer to the function to call.
    */
-  CCL_API void OnComboComplete(const callback func);
+  void OnComboComplete(const callback func);
 
   /// Tells the ComboTracker that a key has been pressed.
   /**
@@ -84,7 +76,7 @@ class ComboTracker {
       @param key the key that wash pushed.
       @param time the current time in milliseconds.
    */
-  CCL_API void KeyDown(const int8_t key, const uint32_t time);
+  void KeyDown(const int8_t key, const uint32_t time);
 
   /// Tells the ComboTracker that a key has been lifted.
   /**
@@ -93,14 +85,14 @@ class ComboTracker {
       @param key the key that wash lifted.
       @param time the current time in milliseconds.
    */
-  CCL_API void KeyUp(const int8_t key, const uint32_t time);
+  void KeyUp(const int8_t key, const uint32_t time);
 
   /// Checks whether any combos are currently being completed.
   /**
       If a combo is currently being completed this will call the function given
       to OnComboComplete.
    */
-  CCL_API void CheckCombos();
+  void CheckCombos();
 
   /// Resets the combo for the given mode.
   /**
@@ -108,7 +100,7 @@ class ComboTracker {
       is completed.
       @param mode the mode to reset.
    */
-  CCL_API void ResetCombo(MODE mode);
+  void ResetCombo(MODE mode);
 
   /** @return a string representation of the state of each combo mode */
   string ToString() const;
@@ -172,8 +164,7 @@ class ComboTracker {
 
   callback OnComboComplete_;
 };
-}  // namespace cc
 
-CCL_API std::ostream &operator<<(std::ostream &out, const cc::ComboTracker &ct);
+std::ostream &operator<<(std::ostream &out, const ComboTracker &ct);
 
-#endif  // CCL_COMBOTRACKER_H_
+#endif  // COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_COMBOTRACKER_H_

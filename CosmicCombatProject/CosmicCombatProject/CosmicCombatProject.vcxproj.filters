@@ -27,6 +27,12 @@
     <ClCompile Include="TournamentGame.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="ComboTracker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Energy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDraw.h">
@@ -36,6 +42,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TournamentGame.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ComboTracker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Energy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

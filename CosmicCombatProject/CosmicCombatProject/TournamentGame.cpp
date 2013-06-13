@@ -8,10 +8,10 @@
 
 TournamentGame::TournamentGame(const float32 width, const float32 height,
                                const float32 stage_width,
-                               const b2Vec2 gravity)
-  : width_(width), height_(height), stage_width_(stage_width),
-    gravity_(gravity) {
-    world_ = new b2World(gravity);
+                               const float32 gravity)
+  : width_(width), height_(height), stage_width_(stage_width) {
+
+  world_ = new b2World(b2Vec2(0.0f, gravity));
 
   CreateBoundaries();
   CreateGround();
@@ -23,25 +23,26 @@ TournamentGame::TournamentGame(const float32 width, const float32 height,
   bodyDef.fixedRotation = true;
   bodyDef.linearDamping = 0.5f;
   bodyDef.gravityScale = 0.0f;
-  player_body_ = world_->CreateBody(&bodyDef);
+  player1_body_ = world_->CreateBody(&bodyDef);
   b2PolygonShape dynamicBox;
   dynamicBox.SetAsBox(0.5f, 0.5f);
   b2FixtureDef fixtureDef;
   fixtureDef.shape = &dynamicBox;
   fixtureDef.density = 1.0f;
   fixtureDef.friction = 1.0f;
-  player_body_->CreateFixture(&fixtureDef);
-  // b2BodyDef bodyDef2;
-  // bodyDef2.type = b2_dynamicBody;
-  // bodyDef2.position.Set(0.0f, -7.0f);
-  // b2Body* body2 = world_->CreateBody(&bodyDef2);
-  // b2PolygonShape dynamicBox2;
-  // dynamicBox2.SetAsBox(0.5f, 0.5f);
-  // b2FixtureDef fixtureDef2;
-  // fixtureDef2.shape = &dynamicBox2;
-  // fixtureDef2.density = 1.0f;
-  // fixtureDef2.friction = 0.3f;
-  // body2->CreateFixture(&fixtureDef2);
+  player1_body_->CreateFixture(&fixtureDef);
+
+   b2BodyDef bodyDef2;
+   bodyDef2.type = b2_dynamicBody;
+   bodyDef2.position.Set(0.0f, -7.0f);
+   b2Body* body2 = world_->CreateBody(&bodyDef2);
+   b2PolygonShape dynamicBox2;
+   dynamicBox2.SetAsBox(0.5f, 0.5f);
+   b2FixtureDef fixtureDef2;
+   fixtureDef2.shape = &dynamicBox2;
+   fixtureDef2.density = 1.0f;
+   fixtureDef2.friction = 0.3f;
+   body2->CreateFixture(&fixtureDef2);
 }
 
 TournamentGame::~TournamentGame(void) {
@@ -51,6 +52,7 @@ TournamentGame::~TournamentGame(void) {
 void TournamentGame::Step() {
   for (int32 i = 0; i < 6; i++)
     world_->Step(kMinTimeStep, kVelocityIterations, kPositionIterations);
+  // world_->ClearForces();
 }
 
 void TournamentGame::CreateBoundaries() {

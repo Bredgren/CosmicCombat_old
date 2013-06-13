@@ -84,13 +84,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ComboTracker.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
+    <ClCompile Include="Energy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="TournamentGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ComboTracker.h" />
     <ClInclude Include="DebugDraw.h" />
+    <ClInclude Include="Energy.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="TournamentGame.h" />
   </ItemGroup>

@@ -1,16 +1,13 @@
 /* Copyright 2013 - Brandon Edgren */
 
-#include "stdafx.h"
-
 #include <sstream>
 #include <string>
+#include <vector>
 
 #include "./ComboTracker.h"
 
 using std::endl;
 using std::stringstream;
-
-namespace cc {
 
 ComboTracker::ComboTree::ComboNode::~ComboNode(void) {
   for (unordered_map<int8_t, ComboNode*>::iterator it = children_.begin();
@@ -112,12 +109,9 @@ void ComboTracker::KeyDown(const int8_t key, const uint32_t time) {
     // For modes 0 and 1, if the key does not advance the combo then it is not
     // part of a combo and we need to restart.
     if (mode == 0 || mode == 1)
-      //if (!mode_tree.Advance(key)) {
       if (!it->Advance(key)) {
-        //mode_tree.Restart();
         it->Restart();
         // Advance again so the key isn't ignored
-        //mode_tree.Advance(key);
         it->Advance(key);
       }
     mode++;
@@ -128,7 +122,8 @@ void ComboTracker::KeyUp(const int8_t key, const uint32_t time) {
   // For mode 0, if any key is lifted then the combo is failed unless a
   // combo is being completed, in which case it doesn't stop until the
   // last key is lifted.
-  bool mode0_complete = mode_combos_[0].count(mode_trees_[0].current_combo()) == 1;
+  bool mode0_complete = mode_combos_[0].count(mode_trees_[0].current_combo())
+                        == 1;
   if ((mode0_complete && key == mode_trees_[0].current_combo().back()) ||
       !mode0_complete)
     mode_trees_[0].Restart();
@@ -167,8 +162,7 @@ string ComboTracker::ToString() const {
   }
   return ret.str();
 }
-}  // namespace cc
 
-std::ostream &operator<<(std::ostream &out, const cc::ComboTracker &ct) {
+std::ostream &operator<<(std::ostream &out, const ComboTracker &ct) {
   return out << ct.ToString();
 }

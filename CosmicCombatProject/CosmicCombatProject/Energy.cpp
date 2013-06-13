@@ -1,13 +1,10 @@
 /* Copyright 2013 - Brandon Edgren */
 
-#include "stdafx.h"
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
 #include "./Energy.h"
-
-namespace cc {
 
 bool isInf(float x) {
     return x > FLT_MAX || x < -FLT_MAX;
@@ -197,4 +194,3 @@ std::string Energy::ToString(uint32_t len) {
   }
   return ss.str();
 }
-}  // namespace cc

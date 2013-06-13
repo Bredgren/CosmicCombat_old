@@ -1,19 +1,11 @@
 /* Copyright 2013 - Brandon Edgren */
-#ifndef ENERGY_H_
-#define ENERGY_H_
-
-#ifdef CCL_EXPORTS
-#define CCL_API __declspec(dllexport)
-#else
-#define CCL_API __declspec(dllimport)
-#endif
+#ifndef COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_ENERGY_H_
+#define COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_ENERGY_H_
 
 #include <stdint.h>
 
 #include <cfloat>
 #include <string>
-
-namespace cc {
 
 /// Keeps track of and interacts with energy levels.
 /**
@@ -33,13 +25,13 @@ class Energy {
   /**
       @param abs_max the value to set all the levels to.
    */
-  CCL_API explicit Energy(const float abs_max) :
+  explicit Energy(const float abs_max) :
     absolute_max_(abs_max),
     battle_point_(abs_max),
     active_max_(abs_max),
     active_(abs_max) {}
 
-  CCL_API virtual ~Energy(void);
+  virtual ~Energy(void);
 
   /* Normal Behaviors */
 
@@ -49,7 +41,7 @@ class Energy {
       Amounts less than 0 are treated as 0.
       @param amount the amount to raise the Active level by.
    */
-  CCL_API void PowerUp(const float amount);
+  void PowerUp(const float amount);
 
   /// Decreases the Active level.
   /**
@@ -57,7 +49,7 @@ class Energy {
       Amounts less than 0 are treated as 0.
       @param amount the amont to lower the Active level by.
    */
-  CCL_API void PowerDown(const float amount);
+  void PowerDown(const float amount);
 
   /// Requests using energy.
   /** 
@@ -73,7 +65,7 @@ class Energy {
             be recovered in battle.
      @return the amount of energy that was actually used.
    */
-  CCL_API float UseEnergy(const float amount, const float recovery_percentage);
+  float UseEnergy(const float amount, const float recovery_percentage);
 
   /// Forces the loss of energy.
   /** 
@@ -87,7 +79,7 @@ class Energy {
       @param recovery_percentage the percentage of the energy given that can
              be recovered in battle.
    */
-  CCL_API void ExpendEnergy(const float amount,
+  void ExpendEnergy(const float amount,
                             const float recovery_percentage);
 
   /// Increases the Active Max level.
@@ -97,7 +89,7 @@ class Energy {
       amount, up to Battle Recovery Point. Amounts less than 0 are treated as 0.
       @param amount the amount to increase Active Max by.
    */
-  CCL_API void Recover(const float amount);
+  void Recover(const float amount);
 
   /// Increases the Active Max level and the Aboslute Max level.
   /** 
@@ -110,44 +102,44 @@ class Energy {
       @param percent_gain how much Aboslute Max increases per unit that Active
                           Max increases past Battle Recovery Point.
    */
-  CCL_API void Rest(const float amount, const float percent_gain);
+  void Rest(const float amount, const float percent_gain);
 
   /* Setters */
 
   /** @param abs_max the value to set Absolute Max at. */
-  CCL_API void set_absolute_max(const float abs_max);
+  void set_absolute_max(const float abs_max);
   /** @param battle_point the value to set attle Recovery Point at. */
-  CCL_API void set_battle_point(const float battle_point);
+  void set_battle_point(const float battle_point);
   /** @param active_max the value to set Active Max at. */
-  CCL_API void set_active_max(const float active_max);
+  void set_active_max(const float active_max);
   /** @param active the value to set Active at. */
-  CCL_API void set_active(const float active);
+  void set_active(const float active);
 
   /// Sets the flag for whether Battle Recovery Point has reached 0.
-  CCL_API void set_reached_energy_0(const bool val) { reached_energy_0_ = val; }
+  void set_reached_energy_0(const bool val) { reached_energy_0_ = val; }
 
   /* Getters */
 
   /** @return the current level of Absolute Max. */
-  CCL_API float absolute_max() const { return absolute_max_; }
+  float absolute_max() const { return absolute_max_; }
   /** @return the current level of Battle Recovery Point. */
-  CCL_API float battle_point() const { return battle_point_; }
+  float battle_point() const { return battle_point_; }
   /** @return the current level of Active Max. */
-  CCL_API float active_max() const { return active_max_; }
+  float active_max() const { return active_max_; }
   /** @return the current level of Active. */
-  CCL_API float active() const { return active_; }
+  float active() const { return active_; }
 
   /** @return Battle Recovery Point as a percent of Absolute Max */
-  CCL_API float battle_point_percent() const
+  float battle_point_percent() const
           { return battle_point_ / absolute_max_; }
   /** @return Active Max as a percent of Absolute Max */
-  CCL_API float active_max_percent() const
+  float active_max_percent() const
           { return active_max_ / absolute_max_; }
   /** @return Active as a percent of Absolute Max */
-  CCL_API float active_percent() const { return active_ / absolute_max_; }
+  float active_percent() const { return active_ / absolute_max_; }
 
   /** @return whether Battle Recovery Point ever reached 0 */
-  CCL_API bool reached_energy_0() const { return reached_energy_0_; }
+  bool reached_energy_0() const { return reached_energy_0_; }
 
   /* For testing */
 
@@ -157,7 +149,7 @@ class Energy {
       @param len how many characters wide the graphic will be.
       @return a string representation of the energy levels.
    */
-  CCL_API std::string ToString(const uint32_t len = 0);
+  std::string ToString(const uint32_t len = 0);
 
  private:
   /* maintains the relationship starting from the top */
@@ -172,6 +164,5 @@ class Energy {
 
   bool reached_energy_0_;
 };
-}  // namespace cc
 
-#endif  // ENERGY_H_
+#endif  // COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_ENERGY_H_
