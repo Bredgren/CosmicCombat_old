@@ -50,6 +50,12 @@ int main() {
       case sf::Event::MouseButtonPressed:
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
           drag = true;
+          b2Vec2 dir(event.mouseButton.x - 400, event.mouseButton.y - 300);
+          if (dir.Length() > 20.0f) {
+            dir.Normalize();
+            dir *= 20.0f;
+          }
+          player_body->ApplyLinearImpulse(dir, b2Vec2_zero);
         } else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
           sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
           sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, main_view);
@@ -85,16 +91,16 @@ int main() {
         break;
       }
     }
-
+    /*
     if (drag) {
       sf::Vector2i pixelPos = sf::Mouse::getPosition(window);
       sf::Vector2f worldPos = window.mapPixelToCoords(pixelPos, main_view);
       target.x = worldPos.x / kPixelsPerMeter;
       target.y = worldPos.y / kPixelsPerMeter;
     }
-
+    
     b2Vec2 dir = target - player_body->GetPosition();
-    if (dir.Length() > 1.0f) {
+    if (dir.Length() >= 0.5f) {
       dir.Normalize();
       dir *= 50.0f;
       player_body->SetLinearVelocity(dir);
@@ -103,14 +109,14 @@ int main() {
       // target = player_body->GetPosition();
       player_body->SetTransform(target, player_body->GetAngle());
     }
-
+    */
     game.Step();
-
+    /*
     if (!player_body->IsAwake()) {
       player_body->SetLinearVelocity(b2Vec2_zero);
       target = player_body->GetPosition();
     }
-
+    */
     b2Vec2 player_loc = player_body->GetPosition();
     main_view.setCenter(player_loc.x*kPixelsPerMeter,
                         player_loc.y*kPixelsPerMeter);

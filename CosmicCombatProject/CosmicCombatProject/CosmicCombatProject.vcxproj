@@ -84,6 +84,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Character.cpp" />
     <ClCompile Include="ComboTracker.cpp" />
     <ClCompile Include="DebugDraw.cpp" />
     <ClCompile Include="Energy.cpp" />
@@ -92,11 +93,13 @@
     <ClCompile Include="TournamentGame.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Character.h" />
     <ClInclude Include="ComboTracker.h" />
     <ClInclude Include="DebugDraw.h" />
     <ClInclude Include="Energy.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="TournamentGame.h" />
+    <ClInclude Include="UserData.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
