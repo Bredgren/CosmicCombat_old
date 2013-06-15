@@ -27,14 +27,26 @@ void DebugDraw::DrawSolidPolygon(const b2Vec2* vertices, int32 vertexCount,
   sf::ConvexShape convex;
   convex.setPointCount(vertexCount);
 
-  sf::Color c(color.r*255, color.g*255, color.b*255);
+  sf::Color c(color.r*255, color.g*255, color.b*255, 0.5*255);
   convex.setFillColor(c);
 
-  for (int32 i = 0; i < vertexCount; ++i)
-    convex.setPoint(i, sf::Vector2f(vertices[i].x * kPixelsPerMeter,
-                                    vertices[i].y * kPixelsPerMeter));
+  sf::ConvexShape convex2;
+  convex2.setPointCount(vertexCount);
+
+  sf::Color c2(color.r*255, color.g*255, color.b*255);
+  convex2.setFillColor(sf::Color::Transparent);
+  convex2.setOutlineColor(c2);
+  convex2.setOutlineThickness(-1.0f);
+
+  for (int32 i = 0; i < vertexCount; ++i) {
+    sf::Vector2f v(vertices[i].x * kPixelsPerMeter,
+                   vertices[i].y * kPixelsPerMeter);
+    convex.setPoint(i, v);
+    convex2.setPoint(i, v);
+  }
 
   window_->draw(convex);
+  window_->draw(convex2);
 }
 
 void DebugDraw::DrawCircle(const b2Vec2& center, float32 radius,
@@ -59,7 +71,7 @@ void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius,
   sf::CircleShape circle;
   circle.setRadius(radius * kPixelsPerMeter);
 
-  sf::Color c(color.r*255, color.g*255, color.b*255);
+  sf::Color c(color.r*255, color.g*255, color.b*255, 0.5*255);
   circle.setFillColor(c);
   circle.setPointCount(100);
 
@@ -67,6 +79,20 @@ void DebugDraw::DrawSolidCircle(const b2Vec2& center, float32 radius,
                      (center.y - radius) * kPixelsPerMeter);
 
   window_->draw(circle);
+
+  sf::CircleShape circle2;
+  circle2.setRadius(radius * kPixelsPerMeter);
+
+  sf::Color c2(color.r*255, color.g*255, color.b*255);
+  circle2.setFillColor(sf::Color::Transparent);
+  circle2.setOutlineColor(c2);
+  circle2.setOutlineThickness(-1.0f);
+  circle2.setPointCount(100);
+
+  circle2.setPosition((center.x - radius) * kPixelsPerMeter,
+                      (center.y - radius) * kPixelsPerMeter);
+
+  window_->draw(circle2);
 }
 
 void DebugDraw::DrawSegment(const b2Vec2& p1, const b2Vec2& p2,
