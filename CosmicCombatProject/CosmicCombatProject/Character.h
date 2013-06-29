@@ -18,8 +18,10 @@ using std::string;
  */
 class Character {
  public:
-  /// User defined types to distinguish characters.
-  enum Type;
+  /// Types used to distinguish characters.
+  enum Type {
+    kDefalut
+  };
 
   /// Creates a new character.
   /**
@@ -35,24 +37,31 @@ class Character {
       @param pos the position to set the target to.
    */
   void SetTargetPosition(b2Vec2 pos);
+
+  void set_world_(b2World *world) { world_ = world; }
+
+  void StartFlying();
+  void StopFlying();
   
   /** Sets the characters body */
-  void set_body(b2Body *body) { body_ = body; }
+  void set_body(b2Body *body, b2World *world);
   /** Get the characters body */
   b2Body *body() const { return body_; }
 
-  /** Sets the characters target position body */
-  void set_target_body(b2Body *body) { target_ = body; }
-  /** Get the characters target body */
-  b2Body *target() const { return target_; }
+  bool flying() const { return flying_; }
 
  private:
   string name_;
   Type type_;
   Energy energy_;
+  b2World *world_;
 
   b2Body *body_;
-  b2Body *target_;
+  b2MouseJoint *target_;
+
+  b2MouseJointDef md_;
+
+  bool flying_;
 
   // alignments
 };

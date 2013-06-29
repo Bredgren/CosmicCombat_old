@@ -99,6 +99,10 @@ void ComboTracker::OnComboComplete(const callback func) {
   OnComboComplete_ = func;
 }
 
+void ComboTracker::OnComboComplete(ComboTrackerUser *user) {
+  user_ = user;
+}
+
 void ComboTracker::KeyDown(const int8_t key, const uint32_t time) {
   int32_t mode = 0;
   for (vector<ComboTree>::iterator it = mode_trees_.begin();
@@ -140,8 +144,9 @@ void ComboTracker::CheckCombos() {
        it != mode_trees_.end(); it++) {
     string sequence = it->current_combo();
     uint32_t time = mode_end_times_[mode] - mode_start_times_[mode];
-    if (mode_combos_[mode].count(sequence))
-      OnComboComplete_(sequence, time);
+    if (mode_combos_[mode].count(sequence) && user_ != NULL) {
+      user_->OnComboComplete(sequence, time);
+    }
     mode++;
   }
 }

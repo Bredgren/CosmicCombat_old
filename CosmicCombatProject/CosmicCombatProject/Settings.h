@@ -4,8 +4,12 @@
 #define COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_SETTINGS_H_
 
 #include <Box2D\Box2D.h>
+#include <string>
 
 const bool kDebugMode = true;
+
+//const char *kWindowTitle = "Cosmic Combat";
+
 const int32 kPixelsPerMeter = 16;
 
 const float32 kMinTimeStep = 1.0f / 240.0f;

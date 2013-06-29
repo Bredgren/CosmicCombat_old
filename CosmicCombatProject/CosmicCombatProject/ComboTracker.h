@@ -14,6 +14,8 @@ using std::unordered_set;
 using std::string;
 using std::vector;
 
+class ComboTrackerUser;
+
 /// A general key combo tracker.
 /**
     Allows the user to use a string to represent a combo as a sequence charaters.
@@ -61,13 +63,19 @@ class ComboTracker {
    */
   void RegisterCombo(const string sequence, const MODE mode);
 
-  /// Sets the callback function
+  /// Sets the callback function.
   /** 
       Specifies the function to call when a combo has been achieved. The default
       function printf's the paramaters that the callback takes.
       @param func a pointer to the function to call.
    */
   void OnComboComplete(const callback func);
+
+  /// Sets the object that has the callback function.
+  /** 
+      @param user a pointer to the object.
+   */
+  void OnComboComplete(ComboTrackerUser *user);
 
   /// Tells the ComboTracker that a key has been pressed.
   /**
@@ -163,8 +171,14 @@ class ComboTracker {
   vector<int32_t> mode_end_times_;
 
   callback OnComboComplete_;
+  ComboTrackerUser *user_;
 };
 
 std::ostream &operator<<(std::ostream &out, const ComboTracker &ct);
+
+class ComboTrackerUser {
+ public:
+  virtual void OnComboComplete(const string sequence, const uint32_t time) = 0;
+};
 
 #endif  // COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_COMBOTRACKER_H_
