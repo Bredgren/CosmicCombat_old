@@ -1,5 +1,4 @@
 /* Copyright 2013 Brandon Edgren */
-
 #ifndef COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_CHARACTER_H_
 #define COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_CHARACTER_H_
 
@@ -8,6 +7,9 @@
 #include <string>
 
 #include "./Energy.h"
+#include "./Planet.h"
+
+class CharacterController;
 
 using std::string;
 
@@ -18,10 +20,11 @@ using std::string;
  */
 class Character {
  public:
+  typedef Character* Ptr;
   /// Types used to distinguish characters.
-  enum Type {
-    kDefalut
-  };
+  //enum Type {
+  //  kDefalut
+  //};
 
   /// Creates a new character.
   /**
@@ -29,39 +32,39 @@ class Character {
       @param type the type of character.
       @param start_energy the character's starting maximum energy.
    */
-  Character(string name, Type type, float start_energy = 100.0f);
+  Character(string name, float start_energy = 100.0f);
   virtual ~Character(void);
 
-  /// Sets the characters target position.
-  /**
-      @param pos the position to set the target to.
-   */
-  void SetTargetPosition(b2Vec2 pos);
+  //void ControllerIs(CharacterController *controller);
 
-  void set_world_(b2World *world) { world_ = world; }
-
-  void StartFlying();
-  void StopFlying();
+  //void TargetPosition() const { return targetPos_; }
+  void TargetPositionIs(b2Vec2 pos);
   
-  /** Sets the characters body */
-  void set_body(b2Body *body, b2World *world);
-  /** Get the characters body */
-  b2Body *body() const { return body_; }
+  b2Body *Body() const { return body_; }
+  void BodyIs(b2Body *body);
 
-  bool flying() const { return flying_; }
+  Planet::Ptr ClosestPlanet();
+  void ClosestPlanetIs(Planet::Ptr planet);
+
+  //bool flying() const { return flying_; }
 
  private:
   string name_;
-  Type type_;
+  //Type type_;
   Energy energy_;
-  b2World *world_;
-
   b2Body *body_;
-  b2MouseJoint *target_;
+  CharacterController *controller_;
+  Planet::Ptr closest_planet_;
+  //Attack attacks_[x];
+  //ComboTracker combo_tracker_;
 
-  b2MouseJointDef md_;
+  //b2World *world_;
 
-  bool flying_;
+  //b2MouseJoint *target_;
+
+  //b2MouseJointDef md_;
+
+  //bool flying_;
 
   // alignments
 };

@@ -4,15 +4,16 @@
 #define COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_GAME_H_
 
 #include <Box2D/Box2D.h>
-#include <SFML\Graphics.hpp>
+#include <SFML/Graphics.hpp>
 
 #include <cstdio>
 
+#include "./Camera.h"
+#include "./Character.h"
 #include "./DebugDraw.h"
-#include "./FSM.h"
+#include "./Planet.h"
+#include "./PlayerController.h"
 #include "./Settings.h"
-#include "./StandardPlayerController.h"
-#include "./TournamentRound.h"
 
 /// Manages the flow of the game.
 /**
@@ -32,6 +33,8 @@ class Game {
    */
   void Run();
 
+  b2World World() const { return world_; }
+
   /// Sets up the display window.
   /**
       @param resolution_width the width of the display area in pixels.
@@ -44,18 +47,14 @@ class Game {
 
  private:
   sf::RenderWindow window_;
-  sf::View main_view_;
+  Camera main_camera_;
 
   DebugDraw debug_draw_;
 
-  FSM game_state_;
-
-  StandardPlayerController player_controler_;
-
-  // tempororay:
-  Character p1;
-  Character p2;
-  TournamentRound round_;
+  b2World world_;
+  Planet::Ptr planets_[2];
+  uint32_t num_planets_;
+  Character::Ptr characters_[1];
 };
 
 #endif  // COSMICCOMBATPROJECT_COSMICCOMBATPROJECT_GAME_H_

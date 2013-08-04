@@ -5,192 +5,129 @@
 #include <string>
 
 #include "./Energy.h"
-
-bool isInf(float x) {
-    return x > FLT_MAX || x < -FLT_MAX;
-}
+#include "./Util.h"
 
 Energy::~Energy(void) {
 }
 
-void Energy::PowerUp(float amount) {
-  if (amount < 0) amount = 0;
+float Energy::max() const {
+  return max_;
+}
 
-  float new_active = active_ + amount;
-  if (new_active > active_max_)
-    active_ = active_max_;
+void Energy::maxIs(const float amount) {
+  max_ = amount;
+  if (max_ < available_)
+    available_ = max_;
+    if (max_ < strength_)
+      strength_ = max_;
+}
+
+void Energy::maxInc(const float amount) {
+  max_ += amount;
+}
+
+float Energy::available() const {
+  return available_;
+}
+
+float Energy::availableAsPercentOfMax() const {
+  return available_ / max_;
+}
+
+void Energy::availableIs(const float amount) {
+  available_ = amount;
+  if (available_ > max_)
+    max_ = available_;
+  else if (available_ < strength_)
+    strength_ = available_;
+}
+
+void Energy::availableInc(const float amount) {
+  float new_available = available_ + amount;
+  if (new_available > max_)
+    available_ = max_;
   else
-    active_ = new_active;
+    available_ = new_available;
+}
 
-  if (amount == 0)
-    reached_energy_0_ = true;
+void Energy::availableDec(const float amount) {
+  if (amount >= available_)
+    available_ = 0.0f;
   else
-    reached_energy_0_ = false;
+    available_ -= amount;
+
+  if (available_ < strength_)
+    strength_ = available_;
 }
 
-void Energy::PowerDown(float amount) {
-  if (amount < 0) amount = 0;
+float Energy::strength() const {
+  return strength_;
+}
 
-  float new_active = active_ - amount;
-  if (new_active < 0)
-    active_ = 0;
+float Energy::strengthAsPercentOfMax() const {
+  return strength_ / max_;
+}
+
+void Energy::strengthIs(const float amount) {
+  strength_ = amount;
+  if (strength_ > available_)
+    available_ = strength_;
+    if (strength_ > max_)
+      max_ = strength_;
+}
+
+void Energy::strengthInc(const float amount) {
+  float new_strength = strength_ + amount;
+  if (new_strength > available_)
+    strength_ = available_;
   else
-    active_ = new_active;
+    strength_ = new_strength;
 }
 
-float Energy::UseEnergy(float amount, float recovery_percentage) {
-  if (amount < 0) amount = 0;
-  else if (amount > active_) amount = active_;
-  if (recovery_percentage > 1) recovery_percentage = 1;
-  else if (recovery_percentage < 0) recovery_percentage = 0;
-
-  float recoverable = amount * recovery_percentage;
-
-  set_active_max(active_max_ - amount);
-  set_battle_point(battle_point_ - amount + recoverable);
-
-  return amount;
-}
-
-void Energy::ExpendEnergy(float amount, float recovery_percentage) {
-  if (amount < 0) amount = 0;
-  if (recovery_percentage > 1) recovery_percentage = 1;
-  else if (recovery_percentage < 0) recovery_percentage = 0;
-
-  float battle_loss = amount - amount * recovery_percentage;
-  if (battle_loss >= battle_point_)
-    reached_energy_0_ = true;
-
-  float recoverable = amount * recovery_percentage;
-
-  set_active_max(active_max_ - amount);
-  set_battle_point(battle_point_ - battle_loss);
-}
-
-void Energy::Recover(float amount) {
-  if (amount < 0) amount = 0;
-
-  float new_active_max = active_max_ + amount;
-  if (new_active_max > battle_point_)
-    active_max_ = battle_point_;
+void Energy::strengthDec(const float amount) {
+  if (amount >= strength_)
+    strength_ = 0.0f;
   else
-    active_max_ = new_active_max;
+    strength_ -= amount;
 }
 
-void Energy::Rest(float amount, float percent_gain) {
-  if (amount < 0) amount = 0;
-  if (percent_gain < 0) percent_gain = 0;
-  else if (percent_gain >= 1) percent_gain = 1 - FLT_EPSILON;
+//void Energy::Recover(float amount, float percent) {
+//  //if (available_ == max_) return;
+//
+//  //float new_available(available_ + amount);
+//  //float new_max(max_ + amount * float(percent.value()));
+//  //if (new_available <= new_max) {
+//  //  available_ = new_available;
+//  //  max_ = new_max;
+//  //} else {
+//  //  // In the case of available energy going over max energy we need to find
+//  //  // the amount that pushes it exactly to max.
+//  //  float new_amount((max_ - available_) / float(1 - percent.value()));
+//  //  available_ += new_amount;
+//  //  max_ = available_;
+//  //}
+//
+//  //if (isInf(max_.value())) available_ = max_;
+//}
 
-  if (active_max_ == absolute_max_) return;
-
-  // Because Aboslute Max increases for each unit that Active Max increases
-  // PAST Battle Recovery Point, there is an edge case where increasing Active
-  // Max brings it past Battle Recovery Point, which means only some of it
-  // contributes to the increase of Aboslute Max.
-  float new_absolute_max = absolute_max_;
-  if (active_max_ == battle_point_)  // if it's already at battle point
-    new_absolute_max = absolute_max_ + amount * percent_gain;
-  else if (active_max_ + amount > battle_point_)  // if raising it moves it past
-    new_absolute_max = absolute_max_ + (active_max_ + amount - battle_point_) *
-                       percent_gain;
-  set_absolute_max(new_absolute_max);
-
-  float new_active_max = active_max_ + amount;
-  if (new_active_max > absolute_max_)
-    set_active_max(absolute_max_);
-  else
-    set_active_max(new_active_max);
-
-  // If somehow Aboslute Max is raised passed the maximum floating point value
-  // and becomes infinity, just set every level to infinity.
-  if (isInf(absolute_max_))
-    set_active(absolute_max_);
-}
-
-void Energy::set_absolute_max(float abs_max) {
-  if (abs_max < 0) abs_max = 0;
-
-  if (abs_max > absolute_max_) {
-    absolute_max_ = abs_max;
-  } else {
-    absolute_max_ = abs_max;
-    maintain_relationship_top_();
-  }
-}
-
-void Energy::set_battle_point(float battle_point) {
-  if (battle_point < 0) battle_point = 0;
-
-  if (battle_point > battle_point_) {
-    battle_point_ = battle_point;
-    maintain_relationship_bottom_();
-  } else {
-    battle_point_ = battle_point;
-    maintain_relationship_top_();
-  }
-}
-
-void Energy::set_active_max(float active_max) {
-  if (active_max < 0) active_max = 0;
-
-  if (active_max > active_max_) {
-    active_max_ = active_max;
-    maintain_relationship_bottom_();
-  } else {
-    active_max_ = active_max;
-    maintain_relationship_top_();
-  }
-}
-
-void Energy::set_active(float active) {
-  if (active < 0) active = 0;
-
-  if (active > active_) {
-    active_ = active;
-    maintain_relationship_bottom_();
-  } else {
-    active_ = active;
-    maintain_relationship_top_();
-  }
-}
-
-void Energy::maintain_relationship_top_() {
-  if (absolute_max_ < battle_point_)
-    battle_point_ = absolute_max_;
-  if (battle_point_ < active_max_)
-    active_max_ = battle_point_;
-  if (active_max_ < active_)
-    active_ = active_max_;
-}
-
-void Energy::maintain_relationship_bottom_() {
-  if (active_ > active_max_)
-    active_max_ = active_;
-  if (active_max_ > battle_point_)
-    battle_point_ = active_max_;
-  if (battle_point_ > absolute_max_)
-    absolute_max_ = battle_point_;
-}
-
-std::string Energy::ToString(uint32_t len) {
+std::string Energy::String(uint32_t len) {
   std::stringstream ss;
-  ss << active_ << "|" << active_max_ << "|" << battle_point_
-     << "|" << absolute_max_ << " : ";
+  ss << strength_ << "|" << available_ << "|"
+     << max_ << " : ";
   if (len > 0) {
-    uint32_t active_len = (uint32_t) (active_ / absolute_max_ * len);
-    uint32_t active_max_len = (uint32_t) (active_max_ / absolute_max_ * len);
-    uint32_t battle_len = (uint32_t) (battle_point_ / absolute_max_ * len);
+    uint32_t strength_len =
+      (uint32_t) (strengthAsPercentOfMax() * len);
+    uint32_t available_len =
+      (uint32_t) (availableAsPercentOfMax() * len);
     for (uint32_t i = 0; i <= len; i++) {
-      if (i <= active_len || isInf(active_))
+      if (i <= strength_len || isInf(strength_))
         ss << "1";
-      else if (i <= active_max_len)
+      else if (i <= available_len)
         ss << "2";
-      else if (i <= battle_len)
-        ss << "3";
       else
-        ss << "4";
+        ss << "3";
     }
   }
   return ss.str();
+  return "energy...";
 }

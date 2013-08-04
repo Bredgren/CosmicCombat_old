@@ -4,15 +4,10 @@
 
 #include "./CharacterController.h"
 
-void CharacterController::AddCharacter(Character *chr) {
-  characters_.push_back(chr);
+void CharacterController::CharacterAdd(Character::Ptr chr) {
+  characters_.insert(chr);
 }
 
-void CharacterController::RemoveCharacter(Character *chr) {
-  std::vector<Character*>::iterator it;
-  for (; it != characters_.end(); it++)
-    if (*it = chr) break;
-
-  if (*it = chr)
-    characters_.erase(it);
+void CharacterController::CharacterRmv(Character::Ptr chr) {
+  characters_.erase(chr);
 }
